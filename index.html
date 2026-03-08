@@ -5,473 +5,672 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>C-9</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600;700&display=swap');
 
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;background:#080806;font-family:'Rajdhani',sans-serif;color:#fff;overflow:hidden;}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
-background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);}
+html { width:100%; height:100%; }
+body {
+  width:100%; height:100%;
+  background:#080806;
+  font-family:'Rajdhani',sans-serif;
+  color:#fff;
+  overflow:hidden;
+}
 
-/* ══ S1 BOMBE ══ */
-#s1{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;transition:opacity .5s,transform .5s;}
-#s1.out{opacity:0;transform:scale(1.05);pointer-events:none;}
+/* scanlines */
+body::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:9999;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);
+}
 
-#shell{width:520px;max-width:96vw;display:flex;flex-direction:column;align-items:stretch;}
+/* ════════════════════════════════════
+   ÉCRAN 1 — BOMBE
+════════════════════════════════════ */
+#screen-bomb {
+  position:fixed; inset:0; z-index:10;
+  display:flex; align-items:center; justify-content:center;
+  transition:opacity .5s, transform .5s;
+}
+#screen-bomb.out { opacity:0; transform:scale(1.04); pointer-events:none; }
+
+#shell {
+  display:flex; flex-direction:column; align-items:stretch;
+  width:500px;
+}
 
 /* fils */
-.fils{display:flex;justify-content:space-around;padding:0 44px;align-items:flex-end;height:30px;}
-.fils.bot{align-items:flex-start;height:22px;}
-.fil{width:3px;border-radius:2px 2px 0 0;position:relative;}
-.fils.bot .fil{border-radius:0 0 2px 2px;}
-.fa{height:30px;background:linear-gradient(180deg,#6b0a06,#c8140a);}
-.fb{height:20px;background:linear-gradient(180deg,#7a6000,#f5c400);}
-.fc{height:26px;background:linear-gradient(180deg,#0a2a5a,#1a6abf);}
-.fd{height:16px;background:linear-gradient(180deg,#0a3a20,#1a8a50);}
-.fe{height:22px;background:linear-gradient(180deg,#333,#888);}
-.ff{height:28px;background:linear-gradient(180deg,#5a2200,#e86000);}
-.fa2{height:22px;background:linear-gradient(180deg,#c8140a,#4a0703);}
-.fb2{height:14px;background:linear-gradient(180deg,#f5c400,#5a4500);}
-.fc2{height:18px;background:linear-gradient(180deg,#1a6abf,#071f3a);}
-.fd2{height:10px;background:linear-gradient(180deg,#1a8a50,#0d3a20);}
-.fe2{height:16px;background:linear-gradient(180deg,#888,#333);}
-.ff2{height:20px;background:linear-gradient(180deg,#e86000,#3a1800);}
-.fg{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:10px;height:4px;border-radius:50%;filter:blur(5px);opacity:.8;}
-.fa .fg{background:#c8140a;}.fb .fg{background:#f5c400;}.fc .fg{background:#1a6abf;}
-.fd .fg{background:#1a8a50;}.fe .fg{background:#888;}.ff .fg{background:#e86000;}
+.fils-top { display:flex; justify-content:space-around; padding:0 40px; height:28px; align-items:flex-end; }
+.fils-bot { display:flex; justify-content:space-around; padding:0 40px; height:20px; align-items:flex-start; }
+.fil { width:3px; position:relative; }
+.fils-top .fil { border-radius:2px 2px 0 0; }
+.fils-bot .fil { border-radius:0 0 2px 2px; }
+.f1t { height:28px; background:linear-gradient(180deg,#6b0a06,#c8140a); }
+.f2t { height:18px; background:linear-gradient(180deg,#7a6000,#f5c400); }
+.f3t { height:24px; background:linear-gradient(180deg,#0a2a5a,#1a6abf); }
+.f4t { height:14px; background:linear-gradient(180deg,#0a3a20,#1a8a50); }
+.f5t { height:20px; background:linear-gradient(180deg,#333,#888); }
+.f6t { height:26px; background:linear-gradient(180deg,#5a2200,#e86000); }
+.f1b { height:20px; background:linear-gradient(180deg,#c8140a,#4a0703); }
+.f2b { height:12px; background:linear-gradient(180deg,#f5c400,#5a4500); }
+.f3b { height:16px; background:linear-gradient(180deg,#1a6abf,#071f3a); }
+.f4b { height:10px; background:linear-gradient(180deg,#1a8a50,#0d3a20); }
+.f5b { height:14px; background:linear-gradient(180deg,#888,#333); }
+.f6b { height:18px; background:linear-gradient(180deg,#e86000,#3a1800); }
+.fg { position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:10px; height:4px; border-radius:50%; filter:blur(5px); opacity:.8; }
+.f1t .fg,.f1b .fg { background:#c8140a; }
+.f2t .fg,.f2b .fg { background:#f5c400; }
+.f3t .fg,.f3b .fg { background:#1a6abf; }
+.f4t .fg,.f4b .fg { background:#1a8a50; }
+.f5t .fg,.f5b .fg { background:#888; }
+.f6t .fg,.f6b .fg { background:#e86000; }
 
-/* boitier */
-#boitier{background:#0f0f0c;border:1px solid #252520;border-radius:2px;
-box-shadow:0 0 0 1px rgba(255,255,255,.03),inset 0 1px 0 rgba(255,255,255,.04),0 30px 80px rgba(0,0,0,.9),0 0 60px rgba(200,20,10,.04);}
+#boitier {
+  background:#0f0f0c;
+  border:1px solid #252520;
+  border-radius:2px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.03), inset 0 1px 0 rgba(255,255,255,.04), 0 30px 80px rgba(0,0,0,.9);
+}
 
-.vr{display:flex;justify-content:space-between;padding:5px 12px;background:#090908;border-bottom:1px solid rgba(255,255,255,.04);}
-.vr.bot{border-bottom:none;border-top:1px solid rgba(255,255,255,.04);}
-.v{width:7px;height:7px;border-radius:50%;background:#151510;border:1px solid rgba(255,255,255,.06);}
+.vis-row {
+  display:flex; justify-content:space-between;
+  padding:5px 12px; background:#090908;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.vis-row.bot { border-bottom:none; border-top:1px solid rgba(255,255,255,.04); }
+.vis { width:7px; height:7px; border-radius:50%; background:#151510; border:1px solid rgba(255,255,255,.06); }
 
-/* écran LED */
-#led{margin:14px;background:#030403;border:1px solid #1c1c14;padding:14px 20px 12px;
-position:relative;overflow:hidden;box-shadow:inset 0 0 30px rgba(0,0,0,.9);}
-#led::after{content:'';position:absolute;inset:0;pointer-events:none;
-background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(200,20,10,.012) 3px,rgba(200,20,10,.012) 4px);}
-.led-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.led-lbl{font-size:8px;letter-spacing:5px;color:rgba(200,20,10,.35);font-weight:600;}
-.led-st{display:flex;align-items:center;gap:5px;font-size:8px;letter-spacing:3px;color:rgba(200,20,10,.3);}
-.sdot{width:5px;height:5px;border-radius:50%;background:#c8140a;animation:bl .7s infinite;}
-@keyframes bl{50%{opacity:.1}}
+#led-screen {
+  margin:14px; background:#030403; border:1px solid #1c1c14;
+  padding:14px 20px 12px; position:relative; overflow:hidden;
+  box-shadow:inset 0 0 30px rgba(0,0,0,.9);
+}
+#led-screen::after {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(200,20,10,.012) 3px,rgba(200,20,10,.012) 4px);
+}
+.led-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.led-lbl { font-size:8px; letter-spacing:5px; color:rgba(200,20,10,.35); font-weight:600; }
+.led-st  { display:flex; align-items:center; gap:5px; font-size:8px; letter-spacing:3px; color:rgba(200,20,10,.3); }
+.sdot { width:5px; height:5px; border-radius:50%; background:#c8140a; animation:blink .7s infinite; }
 
-#timer{font-family:'Orbitron',sans-serif;font-size:88px;font-weight:900;letter-spacing:2px;line-height:1;
-color:#c8140a;text-shadow:0 0 15px rgba(200,20,10,.7),0 0 40px rgba(200,20,10,.3);
-font-variant-numeric:tabular-nums;text-align:center;padding:4px 0 8px;}
-#timer.urgent{animation:urg .4s ease-in-out infinite;}
-@keyframes urg{50%{opacity:.2;text-shadow:0 0 30px rgba(255,0,0,1);}}
+@keyframes blink { 50%{opacity:.1} }
 
-#bar-t{height:2px;background:rgba(200,20,10,.1);margin-bottom:10px;}
-#bar-f{height:100%;background:#c8140a;box-shadow:0 0 6px rgba(200,20,10,.8);transition:width 1s linear;}
-.led-bot{display:flex;justify-content:space-between;font-size:8px;letter-spacing:2px;color:rgba(200,20,10,.25);}
+#timer {
+  font-family:'Orbitron',sans-serif;
+  font-size:88px; font-weight:900; letter-spacing:2px; line-height:1;
+  color:#c8140a;
+  text-shadow:0 0 15px rgba(200,20,10,.7), 0 0 40px rgba(200,20,10,.3);
+  font-variant-numeric:tabular-nums;
+  text-align:center;
+  padding:4px 0 8px;
+}
+#timer.urgent { animation:urg .4s ease-in-out infinite; }
+@keyframes urg { 50%{ opacity:.2; text-shadow:0 0 30px rgba(255,0,0,1); } }
 
-/* tasks */
-#todo{margin:0 14px 14px;display:flex;flex-direction:column;gap:2px;}
-.task{display:flex;align-items:center;background:#0c0c09;border:1px solid rgba(255,255,255,.05);
-border-radius:1px;overflow:hidden;cursor:pointer;transition:border-color .2s;user-select:none;}
-.task::before{content:'';width:3px;height:100%;flex-shrink:0;background:#c8140a;
-box-shadow:0 0 6px rgba(200,20,10,.4);transition:background .3s;}
-.task:hover{border-color:rgba(255,255,255,.1);}
-.task.done{opacity:.4;}.task.done::before{background:#1a8a50;box-shadow:0 0 6px rgba(26,138,80,.6);}
-.task.done .tname{text-decoration:line-through;color:rgba(255,255,255,.25);}
-.tn{font-family:'Orbitron',sans-serif;font-size:24px;font-weight:900;color:rgba(255,255,255,.07);
-width:54px;flex-shrink:0;text-align:center;padding:14px 0;border-right:1px solid rgba(255,255,255,.04);line-height:1;}
-.tb{flex:1;padding:10px 16px;display:flex;flex-direction:column;gap:3px;}
-.tname{font-size:17px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.75);line-height:1;}
-.tsub{font-size:10px;letter-spacing:1px;color:rgba(255,255,255,.2);}
-.tck{width:50px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
-border-left:1px solid rgba(255,255,255,.04);font-size:20px;color:rgba(255,255,255,.07);padding:14px 0;transition:all .2s;}
-.task.done .tck{color:#1a8a50;text-shadow:0 0 8px rgba(26,138,80,.8);}
+#bar-track { height:2px; background:rgba(200,20,10,.1); margin-bottom:10px; }
+#bar-fill  { height:100%; background:#c8140a; box-shadow:0 0 6px rgba(200,20,10,.8); transition:width 1s linear; }
+.led-bot   { display:flex; justify-content:space-between; font-size:8px; letter-spacing:2px; color:rgba(200,20,10,.25); }
 
-.leds{display:flex;justify-content:center;gap:18px;padding:8px 14px;border-top:1px solid rgba(255,255,255,.04);}
-.li{display:flex;align-items:center;gap:5px;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.15);}
-.ld{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.ldr{background:#c8140a;box-shadow:0 0 4px rgba(200,20,10,.8);animation:bl .9s infinite;}
-.ldy{background:#f5c400;box-shadow:0 0 4px rgba(245,196,0,.7);}
-.ldg{background:#1a8a50;box-shadow:0 0 4px rgba(26,138,80,.7);}
+#todo { margin:0 14px 14px; display:flex; flex-direction:column; gap:2px; }
 
-/* ══ FLASH ══ */
-#flash{position:fixed;inset:0;z-index:50;background:#fff;opacity:0;pointer-events:none;}
+.task {
+  display:flex; align-items:center;
+  background:#0c0c09; border:1px solid rgba(255,255,255,.05);
+  border-radius:1px; overflow:hidden;
+  cursor:pointer; user-select:none;
+  transition:border-color .2s;
+}
+.task::before {
+  content:''; width:3px; height:100%; flex-shrink:0;
+  background:#c8140a; box-shadow:0 0 6px rgba(200,20,10,.4);
+  transition:background .3s;
+}
+.task:hover { border-color:rgba(255,255,255,.1); }
+.task.done { opacity:.4; }
+.task.done::before { background:#1a8a50; box-shadow:0 0 6px rgba(26,138,80,.6); }
+.task.done .tname { text-decoration:line-through; color:rgba(255,255,255,.25); }
 
-/* ══ S2 MISSION ══ */
-#s2{
-  position:fixed;inset:0;z-index:20;background:#060604;
-  opacity:0;pointer-events:none;
-  display:flex;flex-direction:column;
+.tn {
+  font-family:'Orbitron',sans-serif; font-size:24px; font-weight:900;
+  color:rgba(255,255,255,.07); width:54px; flex-shrink:0;
+  text-align:center; padding:14px 0;
+  border-right:1px solid rgba(255,255,255,.04); line-height:1;
+}
+.tb { flex:1; padding:10px 16px; display:flex; flex-direction:column; gap:3px; }
+.tname { font-size:17px; font-weight:700; letter-spacing:2px; color:rgba(255,255,255,.75); line-height:1; }
+.tsub  { font-size:10px; letter-spacing:1px; color:rgba(255,255,255,.2); }
+.tck {
+  width:50px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  border-left:1px solid rgba(255,255,255,.04); font-size:20px; color:rgba(255,255,255,.07);
+  padding:14px 0; transition:all .2s;
+}
+.task.done .tck { color:#1a8a50; text-shadow:0 0 8px rgba(26,138,80,.8); }
+
+.leds-row {
+  display:flex; justify-content:center; gap:18px;
+  padding:8px 14px; border-top:1px solid rgba(255,255,255,.04);
+}
+.li { display:flex; align-items:center; gap:5px; font-size:8px; letter-spacing:2px; color:rgba(255,255,255,.15); }
+.ld { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.ld-r { background:#c8140a; box-shadow:0 0 4px rgba(200,20,10,.8); animation:blink .9s infinite; }
+.ld-y { background:#f5c400; box-shadow:0 0 4px rgba(245,196,0,.7); }
+.ld-g { background:#1a8a50; box-shadow:0 0 4px rgba(26,138,80,.7); }
+
+/* ════════════════════════════════════
+   FLASH
+════════════════════════════════════ */
+#flash { position:fixed; inset:0; z-index:50; background:#fff; opacity:0; pointer-events:none; }
+
+/* ════════════════════════════════════
+   ÉCRAN 2 — MISSION
+════════════════════════════════════ */
+#screen-mission {
+  position:fixed; inset:0; z-index:20;
+  background:#060604;
+  opacity:0; pointer-events:none;
   transition:opacity .8s;
+  /* Flex vertical : header / corps / footer */
+  display:flex; flex-direction:column;
 }
-#s2.in{opacity:1;pointer-events:auto;}
+#screen-mission.in { opacity:1; pointer-events:auto; }
 
-#mhdr{
-  flex-shrink:0;height:48px;
-  background:#0a0a08;border-bottom:2px solid #c8140a;
-  padding:0 20px;display:flex;align-items:center;justify-content:space-between;
+/* Header */
+#m-header {
+  flex:0 0 auto;
+  height:48px;
+  background:#0a0a08;
+  border-bottom:2px solid #c8140a;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px;
 }
-.mhtitle{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:900;letter-spacing:4px;color:#c8140a;}
-#mtimer{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:#c8140a;letter-spacing:2px;font-variant-numeric:tabular-nums;}
-#mtimer.urgent{animation:urg .4s ease-in-out infinite;}
-.mhright{font-size:9px;letter-spacing:3px;color:rgba(255,255,255,.2);}
+.mh-title { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:900; letter-spacing:4px; color:#c8140a; }
+#m-timer  { font-family:'Orbitron',sans-serif; font-size:20px; font-weight:700; color:#c8140a; letter-spacing:2px; font-variant-numeric:tabular-nums; }
+#m-timer.urgent { animation:urg .4s ease-in-out infinite; }
+.mh-right { font-size:9px; letter-spacing:3px; color:rgba(255,255,255,.2); }
 
-/* Corps mission — deux colonnes */
-#mbody{
-  flex:1;min-height:0;
-  display:flex;flex-direction:row;
+/* Corps : deux colonnes */
+#m-body {
+  flex:1 1 0;
+  min-height:0;        /* IMPORTANT : permet au flex-child de shrink */
+  display:flex; flex-direction:row;
   overflow:hidden;
 }
 
-#pp{
-  flex:1;min-width:0;
+/* Colonne gauche : plan */
+#m-plan {
+  flex:1 1 0;
+  min-width:0;
+  display:flex; flex-direction:column;
   padding:12px 14px;
-  overflow:hidden;
-  display:flex;flex-direction:column;
-  gap:6px;
   border-right:1px solid rgba(255,255,255,.06);
+  overflow:hidden;
 }
-.pplbl{font-size:8px;letter-spacing:4px;color:rgba(255,255,255,.18);font-weight:600;flex-shrink:0;}
-svg#bplan{flex:1;display:block;min-height:0;width:100%;height:100%;}
+.m-plan-lbl { flex:0 0 auto; font-size:8px; letter-spacing:4px; color:rgba(255,255,255,.18); font-weight:600; margin-bottom:6px; }
+#bplan { flex:1 1 0; display:block; width:100%; min-height:0; }
 
-#rp{
-  width:320px;flex-shrink:0;
-  padding:14px;overflow-y:auto;
-  display:flex;flex-direction:column;gap:12px;
+/* Colonne droite : données */
+#m-data {
+  flex:0 0 320px;
+  display:flex; flex-direction:column;
+  overflow-y:auto;
+  padding:14px;
+  gap:12px;
 }
-#rp::-webkit-scrollbar{display:none;}
+#m-data::-webkit-scrollbar { display:none; }
 
-.rh{font-size:8px;letter-spacing:4px;color:rgba(255,255,255,.2);font-weight:600;
-padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:8px;
-display:flex;justify-content:space-between;align-items:center;}
-.rtag{font-size:7px;letter-spacing:2px;padding:1px 5px;}
-.tagr{background:rgba(200,20,10,.15);color:rgba(200,20,10,.7);}
-
-.obj{display:flex;align-items:flex-start;gap:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);}
-.obj:last-child{border-bottom:none;}
-.on{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:900;color:rgba(200,20,10,.2);width:26px;flex-shrink:0;line-height:1.1;}
-.ob{flex:1;}
-.oname{font-size:13px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.7);line-height:1;}
-.osub{font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.2);margin-top:2px;}
-
-.minfo{background:rgba(200,20,10,.04);border:1px solid rgba(200,20,10,.1);border-left:2px solid rgba(200,20,10,.4);padding:10px 12px;}
-.mititle{font-family:'Orbitron',sans-serif;font-size:10px;color:rgba(200,20,10,.6);letter-spacing:2px;margin-bottom:8px;}
-.mir{display:flex;justify-content:space-between;font-size:9px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03);}
-.mir:last-child{border-bottom:none;}
-.mik{color:rgba(255,255,255,.2);letter-spacing:1px;}
-.miv{color:rgba(255,255,255,.5);}
-.mivr{color:rgba(200,20,10,.7);}
-
-#twist{background:rgba(200,20,10,.04);border:1px solid rgba(200,20,10,.12);border-left:3px solid rgba(200,20,10,.5);
-padding:12px;opacity:0;transform:translateY(6px);transition:opacity 1s,transform 1s;}
-#twist.v{opacity:1;transform:none;}
-.twt{font-size:8px;letter-spacing:4px;color:rgba(200,20,10,.4);font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-.twdot{width:6px;height:6px;border-radius:50%;background:#c8140a;animation:bl .7s infinite;flex-shrink:0;}
-.twe{padding:8px 10px;background:rgba(200,20,10,.03);border:1px solid rgba(200,20,10,.08);
-font-size:10px;letter-spacing:.3px;color:rgba(255,255,255,.35);line-height:1.9;
-opacity:0;transition:opacity .6s;margin-bottom:5px;}
-.twe:last-child{margin-bottom:0;}
-.twe.v{opacity:1;}
-.twe strong{color:rgba(255,255,255,.65);}
-.twe em{color:rgba(200,20,10,.6);font-style:normal;}
-
-#mfoot{
-  flex-shrink:0;height:36px;
-  background:#0a0a08;border-top:1px solid rgba(255,255,255,.05);
-  padding:0 20px;display:flex;justify-content:space-between;align-items:center;
+.d-head {
+  font-size:8px; letter-spacing:4px; color:rgba(255,255,255,.2); font-weight:600;
+  padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,.05); margin-bottom:8px;
+  display:flex; justify-content:space-between; align-items:center;
 }
-.mft{font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.1);}
-.mfarmed{font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:4px;color:rgba(200,20,10,.5);animation:bl 1.4s infinite;}
+.d-tag { font-size:7px; letter-spacing:2px; padding:1px 5px; }
+.tag-r { background:rgba(200,20,10,.15); color:rgba(200,20,10,.7); }
 
-@keyframes wp{0%,100%{filter:drop-shadow(0 0 3px rgba(200,20,10,.5));}50%{filter:drop-shadow(0 0 12px rgba(200,20,10,1));}}
-#mur{animation:wp 1.1s ease-in-out infinite;}
-@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.rv{opacity:0;}.rv.v{animation:fu .5s ease forwards;}
+.obj { display:flex; align-items:flex-start; gap:10px; padding:5px 0; border-bottom:1px solid rgba(255,255,255,.04); }
+.obj:last-child { border-bottom:none; }
+.obj-n { font-family:'Orbitron',sans-serif; font-size:18px; font-weight:900; color:rgba(200,20,10,.2); width:26px; flex-shrink:0; line-height:1.1; }
+.obj-b {}
+.obj-name { font-size:13px; font-weight:700; letter-spacing:2px; color:rgba(255,255,255,.7); line-height:1; }
+.obj-sub  { font-size:9px; letter-spacing:1px; color:rgba(255,255,255,.2); margin-top:2px; }
+
+.mur-box { background:rgba(200,20,10,.04); border:1px solid rgba(200,20,10,.1); border-left:2px solid rgba(200,20,10,.4); padding:10px 12px; }
+.mur-title { font-family:'Orbitron',sans-serif; font-size:10px; color:rgba(200,20,10,.6); letter-spacing:2px; margin-bottom:8px; }
+.mur-row { display:flex; justify-content:space-between; font-size:9px; padding:3px 0; border-bottom:1px solid rgba(255,255,255,.03); }
+.mur-row:last-child { border-bottom:none; }
+.mk { color:rgba(255,255,255,.2); letter-spacing:1px; }
+.mv { color:rgba(255,255,255,.5); }
+.mv-r { color:rgba(200,20,10,.7); }
+
+#twist {
+  background:rgba(200,20,10,.04);
+  border:1px solid rgba(200,20,10,.12);
+  border-left:3px solid rgba(200,20,10,.5);
+  padding:12px;
+  opacity:0; transform:translateY(6px);
+  transition:opacity 1s, transform 1s;
+}
+#twist.v { opacity:1; transform:none; }
+.tw-head { font-size:8px; letter-spacing:4px; color:rgba(200,20,10,.4); font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.tw-dot  { width:6px; height:6px; border-radius:50%; background:#c8140a; animation:blink .7s infinite; flex-shrink:0; }
+.tw-entry {
+  padding:8px 10px; background:rgba(200,20,10,.03); border:1px solid rgba(200,20,10,.08);
+  font-size:10px; letter-spacing:.3px; color:rgba(255,255,255,.35); line-height:1.9;
+  opacity:0; transition:opacity .6s; margin-bottom:5px;
+}
+.tw-entry:last-child { margin-bottom:0; }
+.tw-entry.v { opacity:1; }
+.tw-entry strong { color:rgba(255,255,255,.65); }
+.tw-entry em { color:rgba(200,20,10,.6); font-style:normal; }
+
+/* Footer */
+#m-footer {
+  flex:0 0 auto;
+  height:36px;
+  background:#0a0a08; border-top:1px solid rgba(255,255,255,.05);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px;
+}
+.mf-txt    { font-size:8px; letter-spacing:3px; color:rgba(255,255,255,.1); }
+.mf-armed  { font-family:'Orbitron',sans-serif; font-size:10px; letter-spacing:4px; color:rgba(200,20,10,.5); animation:blink 1.4s infinite; }
+
+/* Animations plan */
+@keyframes wall-pulse {
+  0%,100% { filter:drop-shadow(0 0 3px rgba(200,20,10,.5)); }
+  50%      { filter:drop-shadow(0 0 12px rgba(200,20,10,1)); }
+}
+#mur { animation:wall-pulse 1.1s ease-in-out infinite; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+.reveal { opacity:0; }
+.reveal.v { animation:fadeUp .5s ease forwards; }
 </style>
 </head>
 <body>
 
 <div id="flash"></div>
 
-<!-- S1 -->
-<div id="s1">
+<!-- ════ ÉCRAN 1 : BOMBE ════ -->
+<div id="screen-bomb">
   <div id="shell">
-    <div class="fils">
-      <div class="fil fa"><div class="fg"></div></div>
-      <div class="fil fb"><div class="fg"></div></div>
-      <div class="fil fc"><div class="fg"></div></div>
-      <div class="fil fd"><div class="fg"></div></div>
-      <div class="fil fe"><div class="fg"></div></div>
-      <div class="fil ff"><div class="fg"></div></div>
+
+    <div class="fils-top">
+      <div class="fil f1t"><div class="fg"></div></div>
+      <div class="fil f2t"><div class="fg"></div></div>
+      <div class="fil f3t"><div class="fg"></div></div>
+      <div class="fil f4t"><div class="fg"></div></div>
+      <div class="fil f5t"><div class="fg"></div></div>
+      <div class="fil f6t"><div class="fg"></div></div>
     </div>
+
     <div id="boitier">
-      <div class="vr"><div class="v"></div><div class="v"></div><div class="v"></div><div class="v"></div><div class="v"></div><div class="v"></div></div>
-      <div id="led">
+      <div class="vis-row">
+        <div class="vis"></div><div class="vis"></div><div class="vis"></div>
+        <div class="vis"></div><div class="vis"></div><div class="vis"></div>
+      </div>
+
+      <div id="led-screen">
         <div class="led-top">
           <div class="led-lbl">CHARGE C-9 · ARMÉE</div>
           <div class="led-st"><div class="sdot"></div>FENÊTRE ACTIVE</div>
         </div>
         <div id="timer">--:--</div>
-        <div id="bar-t"><div id="bar-f" style="width:100%"></div></div>
-        <div class="led-bot"><span>MOSSEBA · OP CERBERUS</span><span id="pct">--%</span></div>
+        <div id="bar-track"><div id="bar-fill" style="width:100%"></div></div>
+        <div class="led-bot">
+          <span>MOSSEBA · OP CERBERUS</span>
+          <span id="pct">--%</span>
+        </div>
       </div>
+
       <div id="todo">
         <div class="task" id="t1" onclick="check('t1')">
           <div class="tn">1</div>
-          <div class="tb"><div class="tname">TENUES</div><div class="tsub">Récupérer les équipements d'infiltration</div></div>
+          <div class="tb">
+            <div class="tname">TENUES</div>
+            <div class="tsub">Récupérer les équipements d'infiltration</div>
+          </div>
           <div class="tck">✓</div>
         </div>
         <div class="task" id="t2" onclick="check('t2')">
           <div class="tn">2</div>
-          <div class="tb"><div class="tname">OUTILS</div><div class="tsub">Brouilleur · badge cloné · terminal V-OS</div></div>
+          <div class="tb">
+            <div class="tname">OUTILS</div>
+            <div class="tsub">Brouilleur · badge cloné · terminal V-OS</div>
+          </div>
           <div class="tck">✓</div>
         </div>
         <div class="task" id="t3" onclick="check('t3')">
           <div class="tn">3</div>
-          <div class="tb"><div class="tname">EXPLOSIF</div><div class="tsub">Charge C-9 · base du mur · sous-sol</div></div>
+          <div class="tb">
+            <div class="tname">EXPLOSIF</div>
+            <div class="tsub">Charge C-9 · base du mur · sous-sol</div>
+          </div>
           <div class="tck">✓</div>
         </div>
       </div>
-      <div class="leds">
-        <div class="li"><div class="ld ldr"></div>ARMÉE</div>
-        <div class="li"><div class="ld ldy"></div>MUR · SS-CERBERUS</div>
-        <div class="li"><div class="ld ldg"></div>V · CANAL OK</div>
+
+      <div class="leds-row">
+        <div class="li"><div class="ld ld-r"></div>ARMÉE</div>
+        <div class="li"><div class="ld ld-y"></div>MUR · SS-CERBERUS</div>
+        <div class="li"><div class="ld ld-g"></div>V · CANAL OK</div>
       </div>
-      <div class="vr bot"><div class="v"></div><div class="v"></div><div class="v"></div><div class="v"></div><div class="v"></div><div class="v"></div></div>
+
+      <div class="vis-row bot">
+        <div class="vis"></div><div class="vis"></div><div class="vis"></div>
+        <div class="vis"></div><div class="vis"></div><div class="vis"></div>
+      </div>
     </div>
-    <div class="fils bot">
-      <div class="fil fa2"></div><div class="fil fb2"></div><div class="fil fc2"></div>
-      <div class="fil fd2"></div><div class="fil fe2"></div><div class="fil ff2"></div>
+
+    <div class="fils-bot">
+      <div class="fil f1b"></div><div class="fil f2b"></div><div class="fil f3b"></div>
+      <div class="fil f4b"></div><div class="fil f5b"></div><div class="fil f6b"></div>
     </div>
+
   </div>
 </div>
 
-<!-- S2 -->
-<div id="s2">
-  <div id="mhdr">
-    <div class="mhtitle">⬡ MISSION · CERBERUS</div>
-    <div id="mtimer">--:--</div>
-    <div class="mhright">FENÊTRE NON RENOUVELABLE</div>
+<!-- ════ ÉCRAN 2 : MISSION ════ -->
+<div id="screen-mission">
+
+  <div id="m-header">
+    <div class="mh-title">⬡ MISSION · CERBERUS</div>
+    <div id="m-timer">--:--</div>
+    <div class="mh-right">FENÊTRE NON RENOUVELABLE</div>
   </div>
 
-  <div id="mbody">
-  <div id="pp">
-    <div class="pplbl">PLAN · CERBERUS · SOUS-SOL</div>
-    <svg id="bplan" viewBox="0 0 440 290" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-      <defs>
-        <pattern id="dp" patternUnits="userSpaceOnUse" width="10" height="10"><circle cx="5" cy="5" r=".7" fill="rgba(255,255,255,0.07)"/></pattern>
-        <pattern id="hatch" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="rgba(200,20,10,0.2)" stroke-width="1.2"/></pattern>
-        <marker id="arr" markerWidth="7" markerHeight="7" refX="7" refY="3.5" orient="auto"><polygon points="0 0,7 3.5,0 7" fill="#c8140a"/></marker>
-      </defs>
-      <rect width="440" height="290" fill="url(#dp)"/>
-      <text x="12" y="13" font-size="7" fill="rgba(255,255,255,0.2)" font-family="Rajdhani" font-weight="600" letter-spacing="3">RDC</text>
-      <rect x="12" y="17" width="416" height="98" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-      <rect x="12" y="17" width="62" height="98" fill="rgba(255,255,255,0.01)" stroke="rgba(255,255,255,0.07)" stroke-width=".7"/>
-      <text x="43" y="70" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.18)" font-family="Rajdhani" font-weight="600">ENTRÉE</text>
-      <line x1="74" y1="56" x2="74" y2="76" stroke="rgba(255,255,255,0.3)" stroke-width="1.2"/>
-      <path d="M74 56 Q88 56 88 70" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width=".7" stroke-dasharray="2,2"/>
-      <rect x="74" y="17" width="80" height="52" fill="rgba(245,196,0,0.03)" stroke="rgba(245,196,0,0.15)" stroke-width=".7"/>
-      <text x="114" y="41" text-anchor="middle" font-size="7" fill="rgba(245,196,0,0.35)" font-family="Rajdhani" font-weight="600">SÉCURITÉ</text>
-      <rect x="154" y="17" width="94" height="52" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.08)" stroke-width=".7"/>
-      <text x="201" y="41" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.22)" font-family="Rajdhani" font-weight="600">CONTRÔLE</text>
-      <rect x="248" y="17" width="80" height="52" fill="rgba(245,196,0,0.03)" stroke="rgba(245,196,0,0.15)" stroke-width=".7"/>
-      <text x="288" y="41" text-anchor="middle" font-size="7" fill="rgba(245,196,0,0.3)" font-family="Rajdhani" font-weight="600">ACCÈS A</text>
-      <rect x="328" y="17" width="100" height="98" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.1)" stroke-width=".8"/>
-      <text x="378" y="66" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.18)" font-family="Rajdhani" font-weight="600" letter-spacing="1">DESCENTE</text>
-      <line x1="336" y1="36" x2="420" y2="36" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
-      <line x1="336" y1="50" x2="420" y2="50" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
-      <line x1="336" y1="64" x2="420" y2="64" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
-      <line x1="336" y1="78" x2="420" y2="78" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
-      <line x1="336" y1="92" x2="420" y2="92" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
-      <rect x="74" y="69" width="174" height="46" fill="rgba(255,255,255,.01)" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
-      <text x="161" y="95" text-anchor="middle" font-size="6" fill="rgba(255,255,255,.1)" font-family="Rajdhani" letter-spacing="2">COULOIR RDC</text>
-      <line x1="12" y1="132" x2="428" y2="132" stroke="rgba(255,255,255,.07)" stroke-width=".7" stroke-dasharray="5,4"/>
-      <text x="12" y="144" font-size="7" fill="rgba(255,255,255,0.2)" font-family="Rajdhani" font-weight="600" letter-spacing="3">SOUS-SOL</text>
-      <rect x="12" y="148" width="416" height="130" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
-      <rect x="12" y="188" width="298" height="22" fill="rgba(255,255,255,.01)"/>
-      <text x="161" y="202" text-anchor="middle" font-size="6" fill="rgba(255,255,255,.09)" font-family="Rajdhani" letter-spacing="2">COULOIR SS</text>
-      <rect x="12" y="148" width="98" height="40" fill="rgba(245,196,0,.03)" stroke="rgba(245,196,0,.15)" stroke-width=".8"/>
-      <text x="61" y="165" text-anchor="middle" font-size="7" fill="rgba(245,196,0,.35)" font-family="Rajdhani" font-weight="600">SERVEURS</text>
-      <text x="61" y="177" text-anchor="middle" font-size="6" fill="rgba(245,196,0,.2)" font-family="Rajdhani">ATELIS CORE</text>
-      <rect x="110" y="148" width="88" height="40" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.08)" stroke-width=".7"/>
-      <text x="154" y="171" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.22)" font-family="Rajdhani" font-weight="600">ARCHIVES</text>
-      <rect x="198" y="148" width="112" height="40" fill="rgba(245,196,0,.04)" stroke="rgba(245,196,0,.22)" stroke-width=".9"/>
-      <text x="254" y="165" text-anchor="middle" font-size="7" fill="rgba(245,196,0,.45)" font-family="Rajdhani" font-weight="700">MESS//IA</text>
-      <text x="254" y="177" text-anchor="middle" font-size="6" fill="rgba(245,196,0,.25)" font-family="Rajdhani">NODE · TRANSFERT</text>
-      <circle cx="254" cy="186" r="2.5" fill="rgba(245,196,0,.3)"/>
-      <rect x="328" y="148" width="100" height="130" fill="rgba(255,255,255,.01)" stroke="rgba(255,255,255,.08)" stroke-width=".7"/>
-      <text x="378" y="214" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.15)" font-family="Rajdhani" font-weight="600" letter-spacing="1" transform="rotate(-90,378,214)">TECH / ACCÈS</text>
-      <rect x="12" y="210" width="210" height="68" fill="rgba(200,20,10,.03)" stroke="rgba(200,20,10,.1)" stroke-width=".7"/>
-      <text x="117" y="225" text-anchor="middle" font-size="7" fill="rgba(200,20,10,.28)" font-family="Rajdhani" font-weight="600">CELLULES B1—B8</text>
-      <line x1="12" y1="238" x2="222" y2="238" stroke="rgba(200,20,10,.07)" stroke-width=".5"/>
-      <line x1="38" y1="210" x2="38" y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
-      <line x1="64" y1="210" x2="64" y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
-      <line x1="90" y1="210" x2="90" y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
-      <line x1="116" y1="210" x2="116" y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
-      <line x1="142" y1="210" x2="142" y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
-      <line x1="168" y1="210" x2="168" y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
-      <line x1="194" y1="210" x2="194" y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
-      <rect x="222" y="210" width="106" height="68" fill="url(#hatch)"/>
-      <rect x="222" y="210" width="106" height="68" fill="none" stroke="rgba(200,20,10,.1)" stroke-width=".7"/>
-      <text x="275" y="247" text-anchor="middle" font-size="9" fill="rgba(200,20,10,.22)" font-family="Rajdhani" font-weight="900" letter-spacing="2">LABO</text>
-      <text x="275" y="261" text-anchor="middle" font-size="6" fill="rgba(200,20,10,.15)" font-family="Rajdhani" letter-spacing="1">CLASSIFIÉ</text>
-      <g id="mur">
-        <rect x="218" y="206" width="8" height="76" fill="#c8140a" stroke="#ff2010" stroke-width=".8"/>
-        <line x1="220" y1="220" x2="224" y2="220" stroke="rgba(0,0,0,.3)" stroke-width=".7"/>
-        <line x1="220" y1="234" x2="224" y2="234" stroke="rgba(0,0,0,.3)" stroke-width=".7"/>
-        <line x1="220" y1="248" x2="224" y2="248" stroke="rgba(0,0,0,.3)" stroke-width=".7"/>
-        <line x1="220" y1="262" x2="224" y2="262" stroke="rgba(0,0,0,.3)" stroke-width=".7"/>
-        <line x1="220" y1="275" x2="224" y2="275" stroke="rgba(0,0,0,.3)" stroke-width=".7"/>
-      </g>
-      <line x1="184" y1="244" x2="214" y2="244" stroke="#c8140a" stroke-width="1.1" marker-end="url(#arr)"/>
-      <text x="124" y="239" font-size="8" fill="#c8140a" font-family="Rajdhani" font-weight="700" letter-spacing="1">FAIRE SAUTER</text>
-      <text x="124" y="251" font-size="6" fill="rgba(200,20,10,.45)" font-family="Rajdhani" letter-spacing="1">C-9 · BASE</text>
-      <circle cx="26" cy="244" r="6" fill="#0f0f0c" stroke="rgba(255,255,255,.3)" stroke-width=".8"/>
-      <text x="26" y="248" text-anchor="middle" font-size="7" fill="#fff" font-family="Rajdhani" font-weight="700">V</text>
-    </svg>
-  </div>
+  <div id="m-body">
 
-  <div class="vdiv"></div>
+    <!-- Plan SVG -->
+    <div id="m-plan">
+      <div class="m-plan-lbl">PLAN · CERBERUS · SOUS-SOL</div>
+      <svg id="bplan" viewBox="0 0 440 290" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <pattern id="dots" patternUnits="userSpaceOnUse" width="10" height="10">
+            <circle cx="5" cy="5" r=".7" fill="rgba(255,255,255,0.07)"/>
+          </pattern>
+          <pattern id="hatch" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="7" stroke="rgba(200,20,10,0.2)" stroke-width="1.2"/>
+          </pattern>
+          <marker id="arr" markerWidth="7" markerHeight="7" refX="7" refY="3.5" orient="auto">
+            <polygon points="0 0,7 3.5,0 7" fill="#c8140a"/>
+          </marker>
+        </defs>
+        <rect width="440" height="290" fill="url(#dots)"/>
 
-  <div id="rp">
-    <div class="rv" id="r1">
-      <div class="rh">OBJECTIFS <span class="rtag tagr">PRIORITÉ</span></div>
-      <div class="obj"><div class="on">1</div><div class="ob"><div class="oname">FAIRE SAUTER LE MUR</div><div class="osub">Charge C-9 · base · sous-sol Cerberus</div></div></div>
-      <div class="obj"><div class="on">2</div><div class="ob"><div class="oname">ENTRER DANS LE LABO</div><div class="osub">Zone classifiée derrière le mur</div></div></div>
-      <div class="obj"><div class="on">3</div><div class="ob"><div class="oname">RÉCUPÉRER LES DONNÉES</div><div class="osub">Terminal · node MESS//IA · archives</div></div></div>
-      <div class="obj"><div class="on">4</div><div class="ob"><div class="oname">NEUTRALISER LE NODE</div><div class="osub">Détruire l'infrastructure Cerberus</div></div></div>
+        <!-- RDC -->
+        <text x="12" y="13" font-size="7" fill="rgba(255,255,255,0.2)" font-family="Rajdhani" font-weight="600" letter-spacing="3">RDC</text>
+        <rect x="12" y="17" width="416" height="98" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <rect x="12" y="17" width="62" height="98" fill="rgba(255,255,255,0.01)" stroke="rgba(255,255,255,0.07)" stroke-width=".7"/>
+        <text x="43" y="70" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.18)" font-family="Rajdhani" font-weight="600">ENTRÉE</text>
+        <line x1="74" y1="56" x2="74" y2="76" stroke="rgba(255,255,255,0.3)" stroke-width="1.2"/>
+        <path d="M74 56 Q88 56 88 70" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width=".7" stroke-dasharray="2,2"/>
+        <rect x="74" y="17" width="80" height="52" fill="rgba(245,196,0,0.03)" stroke="rgba(245,196,0,0.15)" stroke-width=".7"/>
+        <text x="114" y="41" text-anchor="middle" font-size="7" fill="rgba(245,196,0,0.35)" font-family="Rajdhani" font-weight="600">SÉCURITÉ</text>
+        <rect x="154" y="17" width="94" height="52" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.08)" stroke-width=".7"/>
+        <text x="201" y="41" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.22)" font-family="Rajdhani" font-weight="600">CONTRÔLE</text>
+        <rect x="248" y="17" width="80" height="52" fill="rgba(245,196,0,0.03)" stroke="rgba(245,196,0,0.15)" stroke-width=".7"/>
+        <text x="288" y="41" text-anchor="middle" font-size="7" fill="rgba(245,196,0,0.3)" font-family="Rajdhani" font-weight="600">ACCÈS A</text>
+        <rect x="328" y="17" width="100" height="98" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.1)" stroke-width=".8"/>
+        <text x="378" y="66" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.18)" font-family="Rajdhani" font-weight="600" letter-spacing="1">DESCENTE</text>
+        <line x1="336" y1="36" x2="420" y2="36" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+        <line x1="336" y1="50" x2="420" y2="50" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+        <line x1="336" y1="64" x2="420" y2="64" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+        <line x1="336" y1="78" x2="420" y2="78" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+        <line x1="336" y1="92" x2="420" y2="92" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+        <rect x="74" y="69" width="174" height="46" fill="rgba(255,255,255,.01)" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+        <text x="161" y="95" text-anchor="middle" font-size="6" fill="rgba(255,255,255,.1)" font-family="Rajdhani" letter-spacing="2">COULOIR RDC</text>
+
+        <!-- Séparateur -->
+        <line x1="12" y1="132" x2="428" y2="132" stroke="rgba(255,255,255,.07)" stroke-width=".7" stroke-dasharray="5,4"/>
+        <text x="12" y="144" font-size="7" fill="rgba(255,255,255,0.2)" font-family="Rajdhani" font-weight="600" letter-spacing="3">SOUS-SOL</text>
+
+        <!-- Sous-sol -->
+        <rect x="12" y="148" width="416" height="130" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+        <rect x="12" y="188" width="298" height="22" fill="rgba(255,255,255,.01)"/>
+        <text x="161" y="202" text-anchor="middle" font-size="6" fill="rgba(255,255,255,.09)" font-family="Rajdhani" letter-spacing="2">COULOIR SS</text>
+        <rect x="12" y="148" width="98" height="40" fill="rgba(245,196,0,.03)" stroke="rgba(245,196,0,.15)" stroke-width=".8"/>
+        <text x="61" y="165" text-anchor="middle" font-size="7" fill="rgba(245,196,0,.35)" font-family="Rajdhani" font-weight="600">SERVEURS</text>
+        <text x="61" y="177" text-anchor="middle" font-size="6" fill="rgba(245,196,0,.2)" font-family="Rajdhani">ATELIS CORE</text>
+        <rect x="110" y="148" width="88" height="40" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.08)" stroke-width=".7"/>
+        <text x="154" y="171" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.22)" font-family="Rajdhani" font-weight="600">ARCHIVES</text>
+        <rect x="198" y="148" width="112" height="40" fill="rgba(245,196,0,.04)" stroke="rgba(245,196,0,.22)" stroke-width=".9"/>
+        <text x="254" y="165" text-anchor="middle" font-size="7" fill="rgba(245,196,0,.45)" font-family="Rajdhani" font-weight="700">MESS//IA</text>
+        <text x="254" y="177" text-anchor="middle" font-size="6" fill="rgba(245,196,0,.25)" font-family="Rajdhani">NODE · TRANSFERT</text>
+        <circle cx="254" cy="186" r="2.5" fill="rgba(245,196,0,.3)"/>
+        <rect x="328" y="148" width="100" height="130" fill="rgba(255,255,255,.01)" stroke="rgba(255,255,255,.08)" stroke-width=".7"/>
+        <text x="378" y="214" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.15)" font-family="Rajdhani" font-weight="600" letter-spacing="1" transform="rotate(-90,378,214)">TECH / ACCÈS</text>
+        <rect x="12" y="210" width="210" height="68" fill="rgba(200,20,10,.03)" stroke="rgba(200,20,10,.1)" stroke-width=".7"/>
+        <text x="117" y="225" text-anchor="middle" font-size="7" fill="rgba(200,20,10,.28)" font-family="Rajdhani" font-weight="600">CELLULES B1—B8</text>
+        <line x1="12" y1="238" x2="222" y2="238" stroke="rgba(200,20,10,.07)" stroke-width=".5"/>
+        <line x1="38"  y1="210" x2="38"  y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
+        <line x1="64"  y1="210" x2="64"  y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
+        <line x1="90"  y1="210" x2="90"  y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
+        <line x1="116" y1="210" x2="116" y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
+        <line x1="142" y1="210" x2="142" y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
+        <line x1="168" y1="210" x2="168" y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
+        <line x1="194" y1="210" x2="194" y2="278" stroke="rgba(200,20,10,.05)" stroke-width=".4"/>
+
+        <!-- Labo caché -->
+        <rect x="222" y="210" width="106" height="68" fill="url(#hatch)"/>
+        <rect x="222" y="210" width="106" height="68" fill="none" stroke="rgba(200,20,10,.1)" stroke-width=".7"/>
+        <text x="275" y="247" text-anchor="middle" font-size="9" fill="rgba(200,20,10,.22)" font-family="Rajdhani" font-weight="900" letter-spacing="2">LABO</text>
+        <text x="275" y="261" text-anchor="middle" font-size="6" fill="rgba(200,20,10,.15)" font-family="Rajdhani" letter-spacing="1">CLASSIFIÉ</text>
+
+        <!-- Mur -->
+        <g id="mur">
+          <rect x="218" y="206" width="8" height="76" fill="#c8140a" stroke="#ff2010" stroke-width=".8"/>
+          <line x1="220" y1="220" x2="224" y2="220" stroke="rgba(0,0,0,.3)" stroke-width=".7"/>
+          <line x1="220" y1="234" x2="224" y2="234" stroke="rgba(0,0,0,.3)" stroke-width=".7"/>
+          <line x1="220" y1="248" x2="224" y2="248" stroke="rgba(0,0,0,.3)" stroke-width=".7"/>
+          <line x1="220" y1="262" x2="224" y2="262" stroke="rgba(0,0,0,.3)" stroke-width=".7"/>
+          <line x1="220" y1="275" x2="224" y2="275" stroke="rgba(0,0,0,.3)" stroke-width=".7"/>
+        </g>
+
+        <!-- Flèche -->
+        <line x1="184" y1="244" x2="214" y2="244" stroke="#c8140a" stroke-width="1.1" marker-end="url(#arr)"/>
+        <text x="124" y="239" font-size="8" fill="#c8140a" font-family="Rajdhani" font-weight="700" letter-spacing="1">FAIRE SAUTER</text>
+        <text x="124" y="251" font-size="6" fill="rgba(200,20,10,.45)" font-family="Rajdhani" letter-spacing="1">C-9 · BASE</text>
+
+        <!-- Position -->
+        <circle cx="26" cy="244" r="6" fill="#0f0f0c" stroke="rgba(255,255,255,.3)" stroke-width=".8"/>
+        <text x="26" y="248" text-anchor="middle" font-size="7" fill="#fff" font-family="Rajdhani" font-weight="700">V</text>
+      </svg>
     </div>
-    <div class="rv" id="r2">
-      <div class="rh">MUR · CIBLE <span class="rtag tagr">C-9</span></div>
-      <div class="minfo">
-        <div class="mititle">MUR B · SOUS-SOL</div>
-        <div class="mir"><span class="mik">Matériau</span><span class="mivr">Béton armé · 40cm</span></div>
-        <div class="mir"><span class="mik">Point faible</span><span class="miv">Base · 30cm du sol</span></div>
-        <div class="mir"><span class="mik">Derrière</span><span class="miv">Labo classifié · node MESS//IA</span></div>
+
+    <!-- Données droite -->
+    <div id="m-data">
+
+      <div class="reveal" id="r1">
+        <div class="d-head">OBJECTIFS <span class="d-tag tag-r">PRIORITÉ</span></div>
+        <div class="obj">
+          <div class="obj-n">1</div>
+          <div class="obj-b"><div class="obj-name">FAIRE SAUTER LE MUR</div><div class="obj-sub">Charge C-9 · base · sous-sol Cerberus</div></div>
+        </div>
+        <div class="obj">
+          <div class="obj-n">2</div>
+          <div class="obj-b"><div class="obj-name">ENTRER DANS LE LABO</div><div class="obj-sub">Zone classifiée derrière le mur</div></div>
+        </div>
+        <div class="obj">
+          <div class="obj-n">3</div>
+          <div class="obj-b"><div class="obj-name">RÉCUPÉRER LES DONNÉES</div><div class="obj-sub">Terminal · node MESS//IA · archives</div></div>
+        </div>
+        <div class="obj">
+          <div class="obj-n">4</div>
+          <div class="obj-b"><div class="obj-name">NEUTRALISER LE NODE</div><div class="obj-sub">Détruire l'infrastructure Cerberus</div></div>
+        </div>
       </div>
-    </div>
-    <div id="twist">
-      <div class="twt"><div class="twdot"></div>SIGNAL INTERCEPTÉ · NODE · LABO</div>
-      <div class="twe" id="tw1"><strong>Ce que Cerberus n'a jamais annoncé :</strong> le labo ne sert pas qu'à la recherche.<br>Des consciences humaines y sont piégées. Transférées. Vivantes dans la boucle.</div>
-      <div class="twe" id="tw2"><em>Fragment #1 ·</em> signal actif depuis le node.<br><strong>"je me souviens de cette pièce... la même lampe qui clignote..."</strong><br>Correspondance partielle avec un profil Mosseba archivé. <em>Avant votre naissance.</em></div>
-      <div class="twe" id="tw3"><em>Fragment F-003 ·</em> 78% match neural.<br><strong>Ce n'est pas un inconnu.</strong> Quelqu'un que l'un d'entre vous connaît est là-dedans.</div>
-      <div class="twe" id="tw4"><strong>Ce qu'on ne vous a pas dit :</strong> vos puces N-3 — ce n'est pas Chava qui a eu l'idée.<br><em>C'est Thomas Levy.</em> Il savait qu'il allait être tué. <strong>Il vous a choisis avant de mourir.</strong></div>
-    </div>
-  </div>
-  </div><!-- fin mbody -->
 
-  <div id="mfoot">
-    <div class="mft">MOSSEBA · OP CERBERUS · 2035</div>
-    <div class="mfarmed">ARMÉE</div>
-    <div class="mft">V · CANAL ACTIF</div>
+      <div class="reveal" id="r2">
+        <div class="d-head">MUR · CIBLE <span class="d-tag tag-r">C-9</span></div>
+        <div class="mur-box">
+          <div class="mur-title">MUR B · SOUS-SOL</div>
+          <div class="mur-row"><span class="mk">Matériau</span><span class="mv-r">Béton armé · 40cm</span></div>
+          <div class="mur-row"><span class="mk">Point faible</span><span class="mv">Base · 30cm du sol</span></div>
+          <div class="mur-row"><span class="mk">Derrière</span><span class="mv">Labo classifié · node MESS//IA</span></div>
+        </div>
+      </div>
+
+      <div id="twist">
+        <div class="tw-head"><div class="tw-dot"></div>SIGNAL INTERCEPTÉ · NODE · LABO</div>
+        <div class="tw-entry" id="tw1">
+          <strong>Ce que Cerberus n'a jamais annoncé :</strong> le labo ne sert pas qu'à la recherche.<br>
+          Des consciences humaines y sont piégées. Transférées. Vivantes dans la boucle.
+        </div>
+        <div class="tw-entry" id="tw2">
+          <em>Fragment #1 ·</em> signal actif depuis le node.<br>
+          <strong>« je me souviens de cette pièce... la même lampe qui clignote... »</strong><br>
+          Correspondance partielle : profil Mosseba archivé. <em>Avant votre naissance.</em>
+        </div>
+        <div class="tw-entry" id="tw3">
+          <em>Fragment F-003 ·</em> 78% match neural.<br>
+          <strong>Ce n'est pas un inconnu.</strong> Quelqu'un que l'un d'entre vous connaît est là-dedans.
+        </div>
+        <div class="tw-entry" id="tw4">
+          <strong>Ce qu'on ne vous a pas dit :</strong> vos puces N-3 — ce n'est pas Chava qui a eu l'idée.<br>
+          <em>C'est Thomas Levy.</em> Il savait qu'il allait être tué.<br>
+          <strong>Il vous a choisis avant de mourir.</strong>
+        </div>
+      </div>
+
+    </div>
   </div>
+
+  <div id="m-footer">
+    <div class="mf-txt">MOSSEBA · OP CERBERUS · 2035</div>
+    <div class="mf-armed">ARMÉE</div>
+    <div class="mf-txt">V · CANAL ACTIF</div>
+  </div>
+
 </div>
 
 <script>
-// ── AUDIO TIC-TAC (Web Audio API) ─────────────────────
+// ── AUDIO TIC-TAC ─────────────────────────────────────
 let actx = null, tickIv = null, ticking = false;
 
-function initAudio(){
-  if(actx) return;
+function initAudio() {
+  if (actx) return;
   actx = new (window.AudioContext || window.webkitAudioContext)();
 }
 
-function playTick(urgent){
-  if(!actx) return;
-  const osc=actx.createOscillator(), g=actx.createGain();
+function playTick(urgent) {
+  if (!actx) return;
+  const osc = actx.createOscillator(), g = actx.createGain();
   osc.connect(g); g.connect(actx.destination);
   osc.frequency.value = urgent ? 1400 : 880;
   osc.type = 'square';
   const t = actx.currentTime;
-  g.gain.setValueAtTime(0,t);
-  g.gain.linearRampToValueAtTime(0.06,t+0.004);
-  g.gain.exponentialRampToValueAtTime(0.0001,t+0.06);
-  osc.start(t); osc.stop(t+0.065);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(0.06, t + 0.004);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
+  osc.start(t); osc.stop(t + 0.065);
 }
 
-function startTicking(){
-  if(ticking) return; ticking=true;
-  tickIv = setInterval(()=>{
-    const rem=Math.max(0,TOTAL-(Date.now()-ts));
-    playTick(rem<10*60*1000);
-  },1000);
+function startTicking() {
+  if (ticking) return; ticking = true;
+  tickIv = setInterval(() => {
+    const rem = Math.max(0, TOTAL - (Date.now() - ts));
+    playTick(rem < 10 * 60 * 1000);
+  }, 1000);
 }
 
-// Démarre au premier clic (contournement autoplay)
-document.addEventListener('click',()=>{ initAudio(); startTicking(); },{once:true});
+document.addEventListener('click', () => { initAudio(); startTicking(); }, { once: true });
 
 // ── COUNTDOWN PERSISTANT ──────────────────────────────
-const TOTAL=60*60*1000;
-const KEY='op_cbr_v7';
-let ts=localStorage.getItem(KEY);
-if(!ts){ts=Date.now();localStorage.setItem(KEY,ts);}else ts=parseInt(ts);
+const TOTAL = 60 * 60 * 1000;
+const KEY   = 'op_cbr_v8';
+let ts = localStorage.getItem(KEY);
+if (!ts) { ts = Date.now(); localStorage.setItem(KEY, ts); }
+else ts = parseInt(ts);
 
-function pad(n){return String(Math.max(0,n)).padStart(2,'0');}
+function pad(n) { return String(Math.max(0, n)).padStart(2, '0'); }
 
-function tick(){
-  const rem=Math.max(0,TOTAL-(Date.now()-ts));
-  const m=Math.floor(rem/60000), s=Math.floor((rem%60000)/1000);
-  const pct=Math.round(rem/TOTAL*100), str=pad(m)+':'+pad(s);
-  const el=document.getElementById('timer');
-  if(el){el.textContent=str;if(rem<10*60*1000)el.classList.add('urgent');}
-  const p=document.getElementById('pct');if(p)p.textContent=pct+'%';
-  const bf=document.getElementById('bar-f');if(bf)bf.style.width=pct+'%';
-  const mt=document.getElementById('mtimer');
-  if(mt){mt.textContent=str;if(rem<10*60*1000)mt.classList.add('urgent');
-    if(rem<=0){mt.style.color='rgba(200,20,10,.2)';mt.style.animation='none';}}
-  if(rem<=0&&el){el.textContent='00:00';el.style.color='rgba(200,20,10,.15)';el.style.textShadow='none';el.style.animation='none';}
+function tick() {
+  const rem = Math.max(0, TOTAL - (Date.now() - ts));
+  const m = Math.floor(rem / 60000), s = Math.floor((rem % 60000) / 1000);
+  const pct = Math.round(rem / TOTAL * 100);
+  const str = pad(m) + ':' + pad(s);
+
+  const el = document.getElementById('timer');
+  if (el) { el.textContent = str; if (rem < 10 * 60 * 1000) el.classList.add('urgent'); }
+  const p = document.getElementById('pct');
+  if (p) p.textContent = pct + '%';
+  const bf = document.getElementById('bar-fill');
+  if (bf) bf.style.width = pct + '%';
+
+  const mt = document.getElementById('m-timer');
+  if (mt) {
+    mt.textContent = str;
+    if (rem < 10 * 60 * 1000) mt.classList.add('urgent');
+    if (rem <= 0) { mt.style.color = 'rgba(200,20,10,.2)'; mt.style.animation = 'none'; }
+  }
+
+  if (rem <= 0 && el) {
+    el.textContent = '00:00'; el.style.color = 'rgba(200,20,10,.15)';
+    el.style.textShadow = 'none'; el.style.animation = 'none';
+  }
 }
-tick(); setInterval(tick,500);
+tick(); setInterval(tick, 500);
 
 // ── TÂCHES ────────────────────────────────────────────
-const done={t1:false,t2:false,t3:false};
-function check(id){
+const done = { t1: false, t2: false, t3: false };
+
+function check(id) {
   initAudio(); startTicking();
-  done[id]=!done[id];
-  document.getElementById(id).classList.toggle('done',done[id]);
-  if(done[id]&&actx){
-    const o=actx.createOscillator(),g=actx.createGain();
-    o.connect(g);g.connect(actx.destination);
-    o.frequency.value=1100;o.type='sine';
-    const t=actx.currentTime;
-    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.08,t+0.01);
-    g.gain.exponentialRampToValueAtTime(0.0001,t+0.25);
-    o.start(t);o.stop(t+0.26);
+  done[id] = !done[id];
+  document.getElementById(id).classList.toggle('done', done[id]);
+  // bip confirmation
+  if (done[id] && actx) {
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.connect(g); g.connect(actx.destination);
+    o.frequency.value = 1100; o.type = 'sine';
+    const t = actx.currentTime;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.08, t + .01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + .25);
+    o.start(t); o.stop(t + .26);
   }
-  if(done.t1&&done.t2&&done.t3)triggerMission();
+  if (done.t1 && done.t2 && done.t3) triggerMission();
 }
 
 // ── TRANSITION ────────────────────────────────────────
-let triggered=false;
-function triggerMission(){
-  if(triggered)return; triggered=true;
-  clearInterval(tickIv); ticking=false;
-  // Son explosion
-  if(actx){
-    const buf=actx.createBuffer(1,actx.sampleRate*.5,actx.sampleRate);
-    const d=buf.getChannelData(0);
-    for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2.5);
-    const src=actx.createBufferSource(),g=actx.createGain();
-    src.buffer=buf;g.gain.value=0.5;src.connect(g);g.connect(actx.destination);src.start();
+let triggered = false;
+
+function triggerMission() {
+  if (triggered) return; triggered = true;
+  clearInterval(tickIv); ticking = false;
+
+  // explosion
+  if (actx) {
+    const buf = actx.createBuffer(1, actx.sampleRate * .5, actx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2.5);
+    const src = actx.createBufferSource(), g = actx.createGain();
+    src.buffer = buf; g.gain.value = 0.5;
+    src.connect(g); g.connect(actx.destination); src.start();
   }
-  const fl=document.getElementById('flash');
-  fl.style.transition='opacity .12s';fl.style.opacity='1';
-  setTimeout(()=>{
-    fl.style.transition='opacity .9s';fl.style.opacity='0';
-    document.getElementById('s1').classList.add('out');
-    document.getElementById('s2').classList.add('in');
-    setTimeout(()=>document.getElementById('r1').classList.add('v'),300);
-    setTimeout(()=>document.getElementById('r2').classList.add('v'),600);
-    setTimeout(()=>{
+
+  const fl = document.getElementById('flash');
+  fl.style.transition = 'opacity .12s'; fl.style.opacity = '1';
+
+  setTimeout(() => {
+    fl.style.transition = 'opacity .9s'; fl.style.opacity = '0';
+    document.getElementById('screen-bomb').classList.add('out');
+    document.getElementById('screen-mission').classList.add('in');
+
+    setTimeout(() => document.getElementById('r1').classList.add('v'), 300);
+    setTimeout(() => document.getElementById('r2').classList.add('v'), 600);
+    setTimeout(() => {
       document.getElementById('twist').classList.add('v');
-      ['tw1','tw2','tw3','tw4'].forEach((id,i)=>{
-        setTimeout(()=>document.getElementById(id).classList.add('v'),300+i*900);
+      ['tw1', 'tw2', 'tw3', 'tw4'].forEach((id, i) => {
+        setTimeout(() => document.getElementById(id).classList.add('v'), 300 + i * 900);
       });
       // reprend tic-tac
-      ticking=true;
-      tickIv=setInterval(()=>{const rem=Math.max(0,TOTAL-(Date.now()-ts));playTick(rem<10*60*1000);},1000);
-    },2000);
-  },160);
+      ticking = true;
+      tickIv = setInterval(() => {
+        const rem = Math.max(0, TOTAL - (Date.now() - ts));
+        playTick(rem < 10 * 60 * 1000);
+      }, 1000);
+    }, 2000);
+  }, 160);
 }
 </script>
 </body>
